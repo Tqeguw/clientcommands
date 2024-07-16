@@ -16,7 +16,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.RandomSupport;
-import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -32,7 +31,6 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
@@ -269,19 +267,6 @@ class DebugRandomSourcePanel extends JPanel {
             }
         });
         bottomPanel.add(dumpStackTraceButton);
-        JButton dumpStackTracesWithQuantitiesButton = new JButton("Dump unique stack traces with quantities");
-        dumpStackTracesWithQuantitiesButton.addActionListener(e -> {
-            if (selectedTick == null) {
-                return;
-            }
-
-            LinkedHashMap<RandomCall, MutableInt> map = new LinkedHashMap<>();
-            for (RandomCall call : selectedTick) {
-                map.computeIfAbsent(call, k -> new MutableInt(1)).add(1);
-            }
-            DebugRandom.LOGGER.info(String.join("\n\n", map.entrySet().stream().map(entry -> String.format("[x%d] %s", entry.getValue().getValue(), DebugRandom.stackTraceById.get(entry.getKey().stackTrace()))).toArray(String[]::new)));
-        });
-        bottomPanel.add(dumpStackTracesWithQuantitiesButton);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
